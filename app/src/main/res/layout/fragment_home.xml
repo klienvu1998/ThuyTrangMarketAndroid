@@ -11,12 +11,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:titleTextColor="@color/white"
-            android:background="@color/black"/>
+            android:layout_height="?attr/actionBarSize"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thùy Trang"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search"
+                android:layout_gravity="center|end"/>
+
+        </FrameLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"

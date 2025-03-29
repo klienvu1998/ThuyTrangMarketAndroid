@@ -62,46 +62,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun initToolBar() {
-        mBinding.toolbar.title = "Home"
-
-        val menuProvider = object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_menu, menu)
-
-                val searchItem = menu.findItem(R.id.action_search)
-                val searchView = searchItem.actionView as SearchView
-                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        val searchFragment = parentFragmentManager.findFragmentByTag(SearchFragment.TAG) as? SearchFragment
-                        searchFragment?.filterList(newText)
-                        return true
-                    }
-                })
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.action_search -> {
-                        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-                        transaction.add(R.id.container, SearchFragment::class.java, null, SearchFragment.TAG)
-                        transaction.addToBackStack(SearchFragment.TAG) // Optional: Add to back stack
-                        transaction.commit()
-                        true
-                    }
-                    else -> false
-                }
-            }
+        mBinding.btnSearch.setOnClickListener {
+            showSearchView()
         }
+    }
 
-        requireActivity().addMenuProvider(menuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        mBinding.toolbar.setOnMenuItemClickListener { item ->
-            menuProvider.onMenuItemSelected(item)
-        }
+    private fun showSearchView() {
+        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+        transaction.add(R.id.container, SearchFragment::class.java, null, SearchFragment.TAG)
+        transaction.addToBackStack(SearchFragment.TAG) // Optional: Add to back stack
+        transaction.commit()
     }
 
     override fun initObserver() {
