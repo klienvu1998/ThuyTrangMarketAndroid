@@ -3,6 +3,7 @@ package com.hyvu.thuytrangmarket.models.data
 import com.hyvu.thuytrangmarket.models.database.product.ProductEntity
 import com.hyvu.thuytrangmarket.models.network.product.NetworkCreateProduct
 import com.hyvu.thuytrangmarket.models.network.product.NetworkProduct
+import java.io.Serializable
 
 data class Product(
     val id: String,
@@ -10,7 +11,7 @@ data class Product(
     val categoryId: String,
     val description: String,
     val price: Double
-) {
+): Serializable {
     fun isValid(): Boolean {
         return name.isNotEmpty() && categoryId.isNotEmpty() && price >= 0
     }

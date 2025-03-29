@@ -1,5 +1,7 @@
 package com.hyvu.thuytrangmarket.ui.listProduct
 
+import android.R.attr
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +18,8 @@ import com.hyvu.thuytrangmarket.R
 import com.hyvu.thuytrangmarket.base.BaseFragment
 import com.hyvu.thuytrangmarket.base.DataSource
 import com.hyvu.thuytrangmarket.databinding.FragmentListProductBinding
+import com.hyvu.thuytrangmarket.models.data.Product
+import com.hyvu.thuytrangmarket.ui.dialog.ProductContextMenuView
 import com.hyvu.thuytrangmarket.utils.DividerItemDecoration
 import com.hyvu.thuytrangmarket.utils.toast
 import com.hyvu.thuytrangmarket.viewModel.home.HomeUiState
@@ -23,6 +27,11 @@ import com.hyvu.thuytrangmarket.viewModel.listProduct.ListProductUiState
 import com.hyvu.thuytrangmarket.viewModel.listProduct.ListProductViewModel
 import com.hyvu.thuytrangmarket.viewModel.listProduct.ListProductViewModelFactory
 import kotlinx.coroutines.launch
+import android.R.attr.bitmap
+import java.io.ByteArrayOutputStream
+import android.R.attr.name
+
+
 
 class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
 
@@ -67,11 +76,25 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
         }
     }
 
+    private val onRecyclerViewListener = object : ListProductAdapter.Listener {
+
+        override fun onLongClickItem(bm: Bitmap, product: Product) {
+            val contextMenu = ProductContextMenuView.newInstance(product.id, product.name, product.price)
+            contextMenu.show(parentFragmentManager, ProductContextMenuView.TAG)
+        }
+
+        override fun onClickListener(product: Product) {
+
+        }
+
+    }
+
     override fun initView() {
         super.initView()
 
         mBinding.rcvProducts.apply {
             adapter = mAdapter
+            mAdapter.setupListener(onRecyclerViewListener)
             val dividerDrawable = ContextCompat.getDrawable(this.context, android.R.drawable.divider_horizontal_bright)
 
             if (dividerDrawable != null) {

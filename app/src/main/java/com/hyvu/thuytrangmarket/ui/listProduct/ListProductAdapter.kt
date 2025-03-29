@@ -1,5 +1,6 @@
 package com.hyvu.thuytrangmarket.ui.listProduct
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,19 @@ import com.hyvu.thuytrangmarket.R
 import com.hyvu.thuytrangmarket.databinding.ItemProductBinding
 import com.hyvu.thuytrangmarket.models.data.Product
 import com.hyvu.thuytrangmarket.utils.NumberUtils
+import com.hyvu.thuytrangmarket.utils.captureView
 
 class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() {
 
+    interface Listener {
+        fun onLongClickItem(bm: Bitmap, product: Product)
+        fun onClickListener(product: Product)
+    }
+
     var items = ArrayList<Product>()
+        private set
+
+    var listener: Listener? = null
         private set
 
     class ViewHolder(v: View): RecyclerView.ViewHolder(v) {
@@ -34,6 +44,15 @@ class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() 
             img.setImageResource(R.drawable.ic_img_picker)
             tvName.text = item.name
             tvPrice.text = NumberUtils.formatPrice(item.price)
+
+            root.setOnLongClickListener {
+                listener?.onLongClickItem(holder.mBinding.root.captureView(), item)
+                return@setOnLongClickListener true
+            }
+
+            root.setOnClickListener {
+                listener?.onClickListener(item)
+            }
         }
     }
 
@@ -43,5 +62,9 @@ class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() 
             addAll(items)
         }
         notifyDataSetChanged()
+    }
+
+    fun setupListener(listener: Listener) {
+        this.listener = listener
     }
 }

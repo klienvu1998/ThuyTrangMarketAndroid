@@ -1,10 +1,13 @@
 package com.hyvu.thuytrangmarket.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.hyvu.thuytrangmarket.MainApplication
+
 
 /**
  * Extension method to show toast for Context.
@@ -33,6 +36,19 @@ fun View.hideKeyboard(): Boolean {
     } catch (ignored: RuntimeException) {
     }
     return false
+}
+
+fun View.captureView(): Bitmap {
+    // Create a bitmap with the view's dimensions
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+    // Create a canvas using the bitmap
+    val canvas = Canvas(bitmap)
+
+    // Draw the view onto the canvas
+    draw(canvas)
+
+    return bitmap
 }
 
 fun getString(id: Int): String {

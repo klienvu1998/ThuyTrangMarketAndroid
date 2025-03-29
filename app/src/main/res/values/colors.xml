@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#28FB22</color>
     <color name="red">#FF0000</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="background_product">#F0EDED</color>
 </resources>

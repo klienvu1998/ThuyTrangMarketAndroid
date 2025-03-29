@@ -1,5 +1,6 @@
-package com.hyvu.thuytrangmarket.ui.createProduct
+package com.hyvu.thuytrangmarket.ui.editProduct
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,26 +14,35 @@ import com.hyvu.thuytrangmarket.base.BaseFragment
 import com.hyvu.thuytrangmarket.databinding.FragmentCreateProductBinding
 import com.hyvu.thuytrangmarket.models.data.Category
 import com.hyvu.thuytrangmarket.models.data.Product
+import com.hyvu.thuytrangmarket.ui.listProduct.ListProductFragment.Companion.IS_LOADED
 import com.hyvu.thuytrangmarket.utils.toast
 import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductEvent
 import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductState
 import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductViewModel
 import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductViewModelFactory
+import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductState
+import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModel
+import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModelFactory
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 
-class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
+class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
     companion object {
-        const val TAG = "CreateProductFragment"
+        const val TAG = "EditProductFragment"
+
+        const val ARG_PRODUCT_ID = "ARG_PRODUCT_ID"
+        const val IS_LOADED = "IS_LOADED"
     }
 
     private val mViewModel by lazy {
-        ViewModelProvider(this, CreateProductViewModelFactory())[CreateProductViewModel::class.java]
+        ViewModelProvider(this, EditProductViewModelFactory())[EditProductViewModel::class.java]
     }
 
     private var currentCategories = emptyList<Category>()
+    private var productId: String = ""
+    private var isLoaded = false
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -40,6 +50,16 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
     ): FragmentCreateProductBinding {
         val v = inflater.inflate(R.layout.fragment_create_product, container, false)
         return FragmentCreateProductBinding.bind(v)
+    }
+
+    override fun getBundle() {
+        super.getBundle()
+        productId = arguments?.getString(ARG_PRODUCT_ID) ?: throw Exception("Empty productId")
+    }
+
+    override fun getSavedInstanceState(savedInstanceState: Bundle?) {
+        super.getSavedInstanceState(savedInstanceState)
+        isLoaded = savedInstanceState?.getBoolean(IS_LOADED) ?: false
     }
 
     override fun initView() {
@@ -50,10 +70,11 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
         }
         mBinding.nameContainer.tvTitle.text = "Tên"
         mBinding.descriptionContainer.tvTitle.text = "Mô tả"
+        mBinding.btnSubmit.text = "Cập nhật"
 
         mBinding.btnSubmit.setOnClickListener {
             if (isValidInput()) {
-                mViewModel.createProduct(Product(
+                mViewModel.updateProduct(Product(
                     id = System.currentTimeMillis().toString(),
                     name = getInputName(),
                     categoryId = getCategoryId(),
@@ -63,6 +84,14 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
             } else {
                 context.toast(getString(R.string.str_input_product_invalid))
             }
+        }
+    }
+
+    override fun initData() {
+        super.initData()
+        if (!isLoaded) {
+            mViewModel.loadData(productId)
+            isLoaded = true
         }
     }
 
@@ -76,19 +105,23 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
         lifecycleScope.launch {
             launch {
                 mViewModel.uiState.collect { uiState ->
-                    if (uiState !is CreateProductState.Loading) {
+                    if (uiState !is EditProductState.Loading) {
                         mBinding.root.removeView(loadingView)
                     }
 
                     when (uiState) {
-                        is CreateProductState.Loading -> {
+                        is EditProductState.Loading -> {
                             mBinding.root.addView(loadingView)
                         }
-                        is CreateProductState.Success -> {
-                            currentCategories = uiState.categories
-                            populateSpinner(categories = uiState.categories)
+                        is EditProductState.Success -> {
+                            val categories = uiState.categories
+                            currentCategories = categories
+                            populateSpinner(categories = categories)
+
+                            val product = uiState.product
+                            setProductDetailsView(product, categories)
                         }
-                        is CreateProductState.Error -> {
+                        is EditProductState.Error -> {
                             context.toast(uiState.msg)
                         }
                     }
@@ -97,14 +130,17 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
             launch {
                 mViewModel.uiEvent.collect { event ->
-                    when (event) {
-                        is CreateProductEvent.CreateProductSuccess -> {
-                            parentFragmentManager.popBackStack()
-                        }
-                    }
+
                 }
             }
         }
+    }
+
+    private fun setProductDetailsView(product: Product, categories: List<Category>) {
+        mBinding.nameContainer.editText.setText(product.name)
+        mBinding.descriptionContainer.editText.setText(product.description)
+        mBinding.priceContainer.editText.setText(product.price.toString())
+        mBinding.categoryPicker.setSelection(categories.indexOfFirst { it.id == product.categoryId })
     }
 
     private fun populateSpinner(categories: List<Category>) {
@@ -143,5 +179,10 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
     private fun getPrice(): Double {
         return mBinding.priceContainer.editText.text.toString().takeIf { it.isNotEmpty() }?.toDouble() ?: -1.0
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(IS_LOADED, isLoaded)
     }
 }
