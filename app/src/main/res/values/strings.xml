@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ThuyTrangMarket</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_product_non_valid">Không hợp lệ</string>
+    <string name="str_input_product_invalid">Nhập sai thông tin</string>
+</resources>
