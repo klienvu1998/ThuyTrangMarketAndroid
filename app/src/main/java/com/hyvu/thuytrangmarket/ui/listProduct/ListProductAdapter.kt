@@ -33,7 +33,6 @@ class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() 
         with(holder.mBinding) {
             img.setImageResource(R.drawable.ic_img_picker)
             tvName.text = item.name
-            tvDescription.text = item.description
             tvPrice.text = NumberUtils.formatPrice(item.price)
         }
     }

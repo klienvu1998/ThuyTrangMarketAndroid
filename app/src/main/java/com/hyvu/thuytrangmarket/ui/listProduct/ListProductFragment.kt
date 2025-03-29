@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.savedstate.SavedStateRegistryOwner
 import com.hyvu.thuytrangmarket.MainActivity
@@ -75,9 +76,9 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
 
             if (dividerDrawable != null) {
                 val dividerItemDecoration = DividerItemDecoration()
-                addItemDecoration(dividerItemDecoration)
+//                addItemDecoration(dividerItemDecoration)
             }
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
         }
 
     }

@@ -2,6 +2,7 @@ package com.hyvu.thuytrangmarket.viewModel.mainAcitivity
 
 import androidx.lifecycle.viewModelScope
 import com.hyvu.thuytrangmarket.base.BaseViewModel
+import com.hyvu.thuytrangmarket.base.DataSource
 import com.hyvu.thuytrangmarket.models.repository.CategoryRepository
 import com.hyvu.thuytrangmarket.models.repository.ProductRepository
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class MainActivityViewModel(
             }
             val localProducts = productRepository.getProductsBySyncStatus(false)
             localProducts.forEach {
-                productRepository.insertProduct(it)
+                productRepository.insertProduct(it, DataSource.NETWORK)
             }
         }
     }

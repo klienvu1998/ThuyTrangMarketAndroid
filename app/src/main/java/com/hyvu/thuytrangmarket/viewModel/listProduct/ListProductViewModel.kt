@@ -46,7 +46,7 @@ class ListProductViewModel(
                     val result = productRepository.fetchProductsByCategory(categoryId)
                     if (result is BaseApiResponse.Success) {
                         result.data.forEach {
-                            productRepository.insertProduct(it)
+                            productRepository.insertProduct(it, DataSource.NETWORK)
                         }
                     } else {
                         throw Exception("Can not get products by categoryId")
