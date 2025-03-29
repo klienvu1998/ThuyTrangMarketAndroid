@@ -49,7 +49,7 @@ class HomeViewModel(
                 try {
                     val networkCategories = categoryRepository.fetchAllCategories()
                     networkCategories.forEach { nCategories ->
-                        categoryRepository.insertCategory(nCategories)
+                        categoryRepository.insertCategory(nCategories, DataSource.NETWORK)
                     }
                     _uiState.emit(HomeUiState.Success(networkCategories))
                 } catch (e: Exception) {

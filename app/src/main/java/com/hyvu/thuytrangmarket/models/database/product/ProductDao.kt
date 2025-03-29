@@ -30,4 +30,7 @@ interface ProductDao {
     @Query("SELECT * FROM products WHERE category_id = :categoryId")
     fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
 
+    @Query("SELECT * FROM products WHERE isSync = :isSync")
+    suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity>
+
 }

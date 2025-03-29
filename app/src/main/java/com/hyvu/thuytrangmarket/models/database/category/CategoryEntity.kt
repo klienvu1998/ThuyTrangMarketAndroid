@@ -8,7 +8,8 @@ import com.hyvu.thuytrangmarket.models.data.Category
 data class CategoryEntity(
     @PrimaryKey
     val id: String,
-    val name: String
+    val name: String,
+    val isSync: Boolean = false
 ) {
 
 

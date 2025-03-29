@@ -7,12 +7,19 @@ import android.view.WindowManager
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import com.hyvu.thuytrangmarket.base.BaseActivity
 import com.hyvu.thuytrangmarket.databinding.MainActivityBinding
 import com.hyvu.thuytrangmarket.ui.home.HomeFragment
 import com.hyvu.thuytrangmarket.ui.search.SearchFragment
+import com.hyvu.thuytrangmarket.viewModel.mainAcitivity.MainActivityViewModel
+import com.hyvu.thuytrangmarket.viewModel.mainAcitivity.MainActivityViewModelFactory
 
 class MainActivity : BaseActivity<MainActivityBinding>() {
+
+    private val mViewModel by lazy {
+        ViewModelProvider(this, MainActivityViewModelFactory())[MainActivityViewModel::class.java]
+    }
 
     override fun getViewBinding(): MainActivityBinding {
         return MainActivityBinding.inflate(layoutInflater, null, false)
@@ -30,6 +37,11 @@ class MainActivity : BaseActivity<MainActivityBinding>() {
 
     fun showNetworkLoading(isShow: Boolean) {
         mBinding.networkLoading.isVisible = isShow
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mViewModel.syncLocalDataToServer()
     }
 
 }

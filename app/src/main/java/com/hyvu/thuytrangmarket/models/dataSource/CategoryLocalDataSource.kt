@@ -14,6 +14,10 @@ class CategoryLocalDataSource(private val categoryDao: CategoryDao) {
         return categoryDao.getAllCategories()
     }
 
+    suspend fun getCategoriesBySyncStatus(isSync: Boolean): List<CategoryEntity> {
+        return categoryDao.getCategoriesBySyncStatus(isSync)
+    }
+
     suspend fun updateCategory(category: CategoryEntity) {
         categoryDao.update(category)
     }

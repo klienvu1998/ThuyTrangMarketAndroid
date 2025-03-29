@@ -37,20 +37,22 @@ class ListProductViewModel(
         viewModelScope.launch {
             try {
                 _uiState.emit(ListProductUiState.Loading(DataSource.LOCAL))
-                val localProducts = productRepository.getProductsByCategory(categoryId).firstOrNull() ?: emptyList()
-                _uiState.emit(ListProductUiState.Success(localProducts))
-
+                launch {
+                    productRepository.getProductsByCategory(categoryId).collect {
+                        _uiState.emit(ListProductUiState.Success(it))
+                    }
+                }
                 try {
                     val result = productRepository.fetchProductsByCategory(categoryId)
                     if (result is BaseApiResponse.Success) {
-                        _uiState.emit(ListProductUiState.Success(result.data))
+                        result.data.forEach {
+                            productRepository.insertProduct(it)
+                        }
                     } else {
                         throw Exception("Can not get products by categoryId")
                     }
                 } catch (e: Exception) {
-                    if (localProducts.isEmpty()) {
-                        _uiState.emit(ListProductUiState.Error(e.message ?: ""))
-                    }
+                    Log.e(TAG, e.message.toString())
                 }
             } catch (e: Exception) {
                 Log.e(TAG, e.message ?: "")

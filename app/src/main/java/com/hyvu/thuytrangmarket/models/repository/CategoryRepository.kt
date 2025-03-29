@@ -2,6 +2,7 @@ package com.hyvu.thuytrangmarket.models.repository
 
 import android.util.Log
 import com.hyvu.thuytrangmarket.MainApplication
+import com.hyvu.thuytrangmarket.base.DataSource
 import com.hyvu.thuytrangmarket.models.data.Category
 import com.hyvu.thuytrangmarket.models.data.toCategoryEntity
 import com.hyvu.thuytrangmarket.models.database.DatabaseProvider
@@ -37,12 +38,18 @@ class CategoryRepository(
         }
     }
 
-    suspend fun insertCategory(category: Category) {
-        localDataSource.insertCategory(category.toCategoryEntity())
+    suspend fun insertCategory(category: Category, dataSource: DataSource) {
+        val isSync = dataSource == DataSource.NETWORK
+        localDataSource.insertCategory(category.toCategoryEntity().copy(isSync = isSync))
     }
 
     fun getAllCategories(): Flow<List<Category>> {
         val categories = localDataSource.getAllCategories().map { it.map { it.toCategory() } }
+        return categories
+    }
+
+    suspend fun getCategoriesBySyncStatus(isSync: Boolean): List<Category> {
+        val categories = localDataSource.getCategoriesBySyncStatus(isSync).map { it.toCategory() }
         return categories
     }
 

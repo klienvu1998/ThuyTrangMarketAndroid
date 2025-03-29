@@ -34,7 +34,11 @@ class ProductLocalDataSource(private val productDao: ProductDao) {
         productDao.deleteAll()
     }
 
-    fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>{
+    fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>> {
         return productDao.getProductsByCategoryId(categoryId)
+    }
+
+    suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity> {
+        return productDao.getProductsBySyncStatus(isSync)
     }
 }

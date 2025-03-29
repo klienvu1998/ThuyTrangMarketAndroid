@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hyvu.thuytrangmarket.R
 import com.hyvu.thuytrangmarket.databinding.ItemProductBinding
 import com.hyvu.thuytrangmarket.models.data.Product
+import com.hyvu.thuytrangmarket.utils.NumberUtils
 
 class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() {
 
     var items = ArrayList<Product>()
         private set
 
-    class ViewHolder(val v: View): RecyclerView.ViewHolder(v) {
+    class ViewHolder(v: View): RecyclerView.ViewHolder(v) {
         var mBinding: ItemProductBinding = ItemProductBinding.bind(v)
     }
 
@@ -27,7 +28,14 @@ class ListProductAdapter: RecyclerView.Adapter<ListProductAdapter.ViewHolder>() 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items[position]
 
+        with(holder.mBinding) {
+            img.setImageResource(R.drawable.ic_img_picker)
+            tvName.text = item.name
+            tvDescription.text = item.description
+            tvPrice.text = NumberUtils.formatPrice(item.price)
+        }
     }
 
     fun setData(items: List<Product>) {

@@ -1,8 +1,10 @@
 package com.hyvu.thuytrangmarket.ui.home
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.hyvu.thuytrangmarket.models.data.Category
+import com.hyvu.thuytrangmarket.ui.listProduct.ListProductFragment
 import com.hyvu.thuytrangmarket.ui.search.SearchFragment
 
 class HomeViewPagerAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
@@ -15,7 +17,11 @@ class HomeViewPagerAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
     }
 
     override fun createFragment(position: Int): Fragment {
-        return SearchFragment()
+        return ListProductFragment().apply {
+            arguments = Bundle().apply {
+                putString(ListProductFragment.ARG_CATEGORY_ID, items[position].id)
+            }
+        }
     }
 
     fun setData(items: List<Category>) {

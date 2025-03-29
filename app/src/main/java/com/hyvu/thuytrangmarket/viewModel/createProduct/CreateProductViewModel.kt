@@ -60,11 +60,11 @@ class CreateProductViewModel(
     fun createProduct(product: Product) {
         viewModelScope.launch {
             if (product.isValid()) {
-                productRepository.insertProduct(product)
+                productRepository.insertProduct(product, DataSource.LOCAL)
                 NetworkCoroutineScope.getInstance().launchSuspend {
                     val result = productRepository.createProduct(product)
                     if (result is BaseApiResponse.Success) {
-                        productRepository.insertProduct(result.data)
+                        productRepository.insertProduct(result.data, DataSource.NETWORK)
                     } else if (result is BaseApiResponse.Error) {
                         Log.e(TAG, "insert product failed")
                     }

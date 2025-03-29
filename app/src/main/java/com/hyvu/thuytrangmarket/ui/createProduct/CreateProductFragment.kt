@@ -8,7 +8,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.hyvu.thuytrangmarket.MainActivity
 import com.hyvu.thuytrangmarket.R
 import com.hyvu.thuytrangmarket.base.BaseFragment
 import com.hyvu.thuytrangmarket.databinding.FragmentCreateProductBinding
@@ -31,6 +30,8 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
     private val mViewModel by lazy {
         ViewModelProvider(this, CreateProductViewModelFactory())[CreateProductViewModel::class.java]
     }
+
+    private var currentCategories = emptyList<Category>()
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -83,6 +84,7 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
                             mBinding.root.addView(loadingView)
                         }
                         is CreateProductState.Success -> {
+                            currentCategories = uiState.categories
                             populateSpinner(categories = uiState.categories)
                         }
                         is CreateProductState.Error -> {
@@ -135,7 +137,7 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
     }
 
     private fun getCategoryId(): String {
-        return mBinding.categoryPicker.selectedItemPosition.toString()
+        return currentCategories[mBinding.categoryPicker.selectedItemPosition].id
     }
 
     private fun getPrice(): Double {

@@ -15,4 +15,4 @@ data class NetworkCategory(
 }
 
 fun NetworkCategory.toCategory() = Category(id, name)
-fun NetworkCategory.toCategoryEntity() = CategoryEntity(id, name)
+fun NetworkCategory.toCategoryEntity() = CategoryEntity(id, name, true)

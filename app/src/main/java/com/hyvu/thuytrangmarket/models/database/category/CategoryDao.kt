@@ -22,4 +22,7 @@ interface CategoryDao {
 
     @Update
     suspend fun update(categoryEntity: CategoryEntity)
+
+    @Query("SELECT * FROM categories WHERE isSync = :isSync")
+    suspend fun getCategoriesBySyncStatus(isSync: Boolean): List<CategoryEntity>
 }

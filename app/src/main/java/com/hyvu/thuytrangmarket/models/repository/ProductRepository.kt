@@ -3,6 +3,7 @@ package com.hyvu.thuytrangmarket.models.repository
 import android.util.Log
 import com.hyvu.thuytrangmarket.MainApplication
 import com.hyvu.thuytrangmarket.base.BaseApiResponse
+import com.hyvu.thuytrangmarket.base.DataSource
 import com.hyvu.thuytrangmarket.base.NetworkErrorCode
 import com.hyvu.thuytrangmarket.models.data.Product
 import com.hyvu.thuytrangmarket.models.data.toNetworkCreateProduct
@@ -40,20 +41,23 @@ class ProductRepository(
         fun getInstance() = HOLDER.repository
     }
 
-    suspend fun insertProduct(product: Product) {
-        localDatasource.insertProduct(product.toProductEntity())
+    suspend fun insertProduct(product: Product, dataSource: DataSource) {
+        val isSync = dataSource == DataSource.NETWORK
+        localDatasource.insertProduct(product.toProductEntity(isSync))
     }
 
     fun getAllProducts(): Flow<List<Product>> {
         return localDatasource.getAllProducts().map { it.map { it.toProduct() } }
     }
 
-    suspend fun deleteProduct(product: Product) {
-        localDatasource.deleteProduct(product.toProductEntity())
+    suspend fun deleteProduct(product: Product, dataSource: DataSource) {
+        val isSync = dataSource == DataSource.NETWORK
+        localDatasource.deleteProduct(product.toProductEntity(isSync))
     }
 
-    suspend fun updateProduct(product: Product) {
-        localDatasource.updateProduct(product.toProductEntity())
+    suspend fun updateProduct(product: Product, dataSource: DataSource) {
+        val isSync = dataSource == DataSource.NETWORK
+        localDatasource.updateProduct(product.toProductEntity(isSync))
     }
 
     fun getProductById(productId: String): Flow<Product?> {
@@ -70,6 +74,10 @@ class ProductRepository(
 
     fun getProductsByCategory(categoryId: String): Flow<List<Product>> {
         return localDatasource.getProductsByCategoryId(categoryId).map { it.map { it.toProduct() } }
+    }
+
+    suspend fun getProductsBySyncStatus(isSync: Boolean): List<Product> {
+        return localDatasource.getProductsBySyncStatus(isSync).map { it.toProduct() }
     }
 
     suspend fun fetchProductsByCategory(categoryId: String): BaseApiResponse<List<Product>> = withContext(ioDispatcher) {

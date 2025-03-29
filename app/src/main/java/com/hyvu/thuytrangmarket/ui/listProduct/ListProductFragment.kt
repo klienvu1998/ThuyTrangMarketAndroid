@@ -1,7 +1,9 @@
 package com.hyvu.thuytrangmarket.ui.listProduct
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +15,7 @@ import com.hyvu.thuytrangmarket.R
 import com.hyvu.thuytrangmarket.base.BaseFragment
 import com.hyvu.thuytrangmarket.base.DataSource
 import com.hyvu.thuytrangmarket.databinding.FragmentListProductBinding
+import com.hyvu.thuytrangmarket.utils.DividerItemDecoration
 import com.hyvu.thuytrangmarket.utils.toast
 import com.hyvu.thuytrangmarket.viewModel.home.HomeUiState
 import com.hyvu.thuytrangmarket.viewModel.listProduct.ListProductUiState
@@ -26,6 +29,8 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
         const val TAG = "ListProductFragment"
 
         const val ARG_CATEGORY_ID = "ARG_CATEGORY_ID"
+
+        const val IS_LOADED = "IS_LOADED"
     }
 
     private lateinit var categoryId: String
@@ -33,6 +38,7 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
         ViewModelProvider(this, ListProductViewModelFactory())[ListProductViewModel::class.java]
     }
     private val mAdapter by lazy { ListProductAdapter() }
+    private var isLoaded = false
 
     override fun getViewBinding(
         inflater: LayoutInflater,
@@ -42,6 +48,11 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
         return FragmentListProductBinding.bind(v)
     }
 
+    override fun getSavedInstanceState(savedInstanceState: Bundle?) {
+        super.getSavedInstanceState(savedInstanceState)
+        isLoaded = savedInstanceState?.getBoolean(IS_LOADED) ?: false
+    }
+
     override fun getBundle() {
         super.getBundle()
         categoryId = arguments?.getString(ARG_CATEGORY_ID, "") ?: ""
@@ -49,7 +60,10 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
 
     override fun initData() {
         super.initData()
-        mViewModel.loadData(categoryId)
+        if (!isLoaded) {
+            mViewModel.loadData(categoryId)
+            isLoaded = true
+        }
     }
 
     override fun initView() {
@@ -57,6 +71,12 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
 
         mBinding.rcvProducts.apply {
             adapter = mAdapter
+            val dividerDrawable = ContextCompat.getDrawable(this.context, android.R.drawable.divider_horizontal_bright)
+
+            if (dividerDrawable != null) {
+                val dividerItemDecoration = DividerItemDecoration()
+                addItemDecoration(dividerItemDecoration)
+            }
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
 
@@ -99,6 +119,10 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
 
                         is ListProductUiState.Error -> {
                             context?.toast(uiState.msg)
+                        }
+
+                        else -> {
+
                         }
                     }
                 }
