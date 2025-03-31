@@ -7,8 +7,9 @@ import com.hyvu.thuytrangmarket.models.data.Product
 
 @Entity(tableName = "products")
 data class ProductEntity(
-    val id: String,
     @PrimaryKey
+    val id: String,
+    val globalId: String,
     val name: String,
     @ColumnInfo(name = "category_id")
     val categoryId: String,
@@ -18,5 +19,5 @@ data class ProductEntity(
 )
 
 fun ProductEntity.toProduct(): Product {
-    return Product(id, name, categoryId, description, price)
+    return Product(id, globalId, name, categoryId, description, price)
 }

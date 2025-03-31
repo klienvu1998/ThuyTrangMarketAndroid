@@ -6,6 +6,8 @@ import com.hyvu.thuytrangmarket.models.data.Product
 data class NetworkProduct(
     @SerializedName("_id")
     val id: String,
+    @SerializedName("clientId")
+    val clientId: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("categoryId")
@@ -20,6 +22,6 @@ data class NetworkProduct(
 
 fun NetworkProduct.toProduct(): Product {
     return Product(
-        id, name, categoryId, description, price
+        clientId, id, name, categoryId, description, price
     )
 }

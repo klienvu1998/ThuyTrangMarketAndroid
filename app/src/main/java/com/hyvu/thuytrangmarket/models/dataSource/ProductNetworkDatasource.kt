@@ -18,4 +18,8 @@ class ProductNetworkDatasource(private val productApiService: ProductApiService)
         return productApiService.createProduct(product)
     }
 
+    suspend fun updateProduct(productId: String, product: NetworkCreateProduct): NetworkProduct {
+        return productApiService.updateProduct(productId, product)
+    }
+
 }

@@ -55,6 +55,7 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
             if (isValidInput()) {
                 mViewModel.createProduct(Product(
                     id = System.currentTimeMillis().toString(),
+                    globalId = "",
                     name = getInputName(),
                     categoryId = getCategoryId(),
                     description = getDescription(),

@@ -58,7 +58,24 @@ class EditProductViewModel(
 
     fun updateProduct(product: Product) {
         viewModelScope.launch {
+            _uiState.emit(EditProductState.Loading(DataSource.LOCAL))
+            try {
+                productRepository.updateProduct(product, DataSource.LOCAL)
 
+                if (product.globalId.isNotEmpty()) {
+                    _uiState.emit(EditProductState.Loading(DataSource.NETWORK))
+                    try {
+                        val networkProduct = productRepository.updateProductNetwork(product)
+                        if (networkProduct is BaseApiResponse.Success) {
+                            productRepository.updateProduct(networkProduct.data, DataSource.NETWORK)
+                        }
+                    } catch (e: Exception) {
+                        _uiState.emit(EditProductState.Error("Exception update item on network"))
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.emit(EditProductState.Error("Exception update item"))
+            }
         }
     }
 

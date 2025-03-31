@@ -100,4 +100,14 @@ class ProductRepository(
         }
     }
 
+    suspend fun updateProductNetwork(product: Product): BaseApiResponse<Product> = withContext(ioDispatcher) {
+        return@withContext try {
+            val data = networkDatasource.updateProduct(product.globalId, product.toNetworkCreateProduct())
+            BaseApiResponse.Success(data.toProduct())
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "")
+            BaseApiResponse.Error(NetworkErrorCode.UNKNOWN, e.message ?: "")
+        }
+    }
+
 }

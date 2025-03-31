@@ -3,6 +3,8 @@ package com.hyvu.thuytrangmarket.models.network.product
 import com.google.gson.annotations.SerializedName
 
 data class NetworkCreateProduct (
+    @SerializedName("clientId")
+    val clientId: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("categoryId")

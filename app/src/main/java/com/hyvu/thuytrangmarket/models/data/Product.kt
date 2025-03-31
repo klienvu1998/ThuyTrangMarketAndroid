@@ -7,6 +7,7 @@ import java.io.Serializable
 
 data class Product(
     val id: String,
+    val globalId: String,
     val name: String,
     val categoryId: String,
     val description: String,
@@ -18,13 +19,13 @@ data class Product(
 }
 
 fun Product.toProductEntity(isSync: Boolean): ProductEntity {
-    return ProductEntity(id, name, categoryId, description, price, isSync = isSync)
+    return ProductEntity(id, globalId, name, categoryId, description, price, isSync = isSync)
 }
 
 fun Product.toNetworkProduct(): NetworkProduct {
-    return NetworkProduct("", name, categoryId, description, price, "")
+    return NetworkProduct(globalId, id, name, categoryId, description, price, "")
 }
 
 fun Product.toNetworkCreateProduct(): NetworkCreateProduct {
-    return NetworkCreateProduct(name, categoryId, description, price)
+    return NetworkCreateProduct(id, name, categoryId, description, price)
 }

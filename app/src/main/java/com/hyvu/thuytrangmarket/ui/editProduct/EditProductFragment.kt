@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.contains
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyvu.thuytrangmarket.R
@@ -14,17 +15,11 @@ import com.hyvu.thuytrangmarket.base.BaseFragment
 import com.hyvu.thuytrangmarket.databinding.FragmentCreateProductBinding
 import com.hyvu.thuytrangmarket.models.data.Category
 import com.hyvu.thuytrangmarket.models.data.Product
-import com.hyvu.thuytrangmarket.ui.listProduct.ListProductFragment.Companion.IS_LOADED
 import com.hyvu.thuytrangmarket.utils.toast
-import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductEvent
-import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductState
-import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductViewModel
-import com.hyvu.thuytrangmarket.viewModel.createProduct.CreateProductViewModelFactory
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductState
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModel
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModelFactory
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 
 class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
@@ -71,20 +66,6 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
         mBinding.nameContainer.tvTitle.text = "Tên"
         mBinding.descriptionContainer.tvTitle.text = "Mô tả"
         mBinding.btnSubmit.text = "Cập nhật"
-
-        mBinding.btnSubmit.setOnClickListener {
-            if (isValidInput()) {
-                mViewModel.updateProduct(Product(
-                    id = System.currentTimeMillis().toString(),
-                    name = getInputName(),
-                    categoryId = getCategoryId(),
-                    description = getDescription(),
-                    price = getPrice()
-                ))
-            } else {
-                context.toast(getString(R.string.str_input_product_invalid))
-            }
-        }
     }
 
     override fun initData() {
@@ -111,7 +92,9 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
                     when (uiState) {
                         is EditProductState.Loading -> {
-                            mBinding.root.addView(loadingView)
+                            if (!mBinding.root.contains(loadingView)) {
+                                mBinding.root.addView(loadingView)
+                            }
                         }
                         is EditProductState.Success -> {
                             val categories = uiState.categories
@@ -141,6 +124,21 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
         mBinding.descriptionContainer.editText.setText(product.description)
         mBinding.priceContainer.editText.setText(product.price.toString())
         mBinding.categoryPicker.setSelection(categories.indexOfFirst { it.id == product.categoryId })
+
+        mBinding.btnSubmit.setOnClickListener {
+            if (isValidInput()) {
+                mViewModel.updateProduct(Product(
+                    id = product.id,
+                    globalId = product.globalId,
+                    name = getInputName(),
+                    categoryId = getCategoryId(),
+                    description = getDescription(),
+                    price = getPrice()
+                ))
+            } else {
+                context.toast(getString(R.string.str_input_product_invalid))
+            }
+        }
     }
 
     private fun populateSpinner(categories: List<Category>) {
