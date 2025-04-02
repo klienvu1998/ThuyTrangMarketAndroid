@@ -73,6 +73,7 @@ class EditProductViewModel(
                         _uiState.emit(EditProductState.Error("Exception update item on network"))
                     }
                 }
+                _uiEvent.emit(EditProductEvent.EditSuccess)
             } catch (e: Exception) {
                 _uiState.emit(EditProductState.Error("Exception update item"))
             }
@@ -88,5 +89,5 @@ sealed class EditProductState: UiState {
 }
 
 sealed class EditProductEvent: UiEvent {
-
+    object EditSuccess: EditProductEvent()
 }

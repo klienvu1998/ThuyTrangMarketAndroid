@@ -124,7 +124,7 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     val selectedCategory = categories[position]
                     // Handle the selected category (e.g., store it in a variable)
-                    context.toast("Selected: ${selectedCategory.name}")
+//                    context.toast("Selected: ${selectedCategory.name}")
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -82,7 +82,7 @@ class ProductRepository(
     }
 
     suspend fun getProductsByNameContaining(inputText: String): List<Product> {
-        return localDatasource.getProductsByNameContaining(inputText).map { it.toProduct() }
+        return localDatasource.getProductsByNameContaining(inputText.replace(" ", "-")).map { it.toProduct() }
     }
 
     suspend fun markItemAsDeleted(productId: String) {

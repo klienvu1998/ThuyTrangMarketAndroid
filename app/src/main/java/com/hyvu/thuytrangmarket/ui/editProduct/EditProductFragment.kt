@@ -16,6 +16,7 @@ import com.hyvu.thuytrangmarket.databinding.FragmentCreateProductBinding
 import com.hyvu.thuytrangmarket.models.data.Category
 import com.hyvu.thuytrangmarket.models.data.Product
 import com.hyvu.thuytrangmarket.utils.toast
+import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductEvent
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductState
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModel
 import com.hyvu.thuytrangmarket.viewModel.editProduct.EditProductViewModelFactory
@@ -113,7 +114,11 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
             launch {
                 mViewModel.uiEvent.collect { event ->
-
+                    when (event) {
+                        EditProductEvent.EditSuccess -> {
+                            parentFragmentManager.popBackStack()
+                        }
+                    }
                 }
             }
         }
@@ -154,7 +159,7 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     val selectedCategory = categories[position]
                     // Handle the selected category (e.g., store it in a variable)
-                    context.toast("Selected: ${selectedCategory.name}")
+//                    context.toast("Selected: ${selectedCategory.name}")
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
