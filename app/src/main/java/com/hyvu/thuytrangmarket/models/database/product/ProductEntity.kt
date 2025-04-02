@@ -15,7 +15,10 @@ data class ProductEntity(
     val categoryId: String,
     val description: String,
     val price: Double,
+    @ColumnInfo(name = "is_sync")
     val isSync: Boolean = false,
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean = false,
     val slug: String
 )
 

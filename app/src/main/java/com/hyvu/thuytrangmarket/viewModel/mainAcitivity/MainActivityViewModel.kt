@@ -1,8 +1,10 @@
 package com.hyvu.thuytrangmarket.viewModel.mainAcitivity
 
 import androidx.lifecycle.viewModelScope
+import com.hyvu.thuytrangmarket.base.BaseApiResponse
 import com.hyvu.thuytrangmarket.base.BaseViewModel
 import com.hyvu.thuytrangmarket.base.DataSource
+import com.hyvu.thuytrangmarket.models.database.product.toProduct
 import com.hyvu.thuytrangmarket.models.repository.CategoryRepository
 import com.hyvu.thuytrangmarket.models.repository.ProductRepository
 import kotlinx.coroutines.launch
@@ -20,7 +22,14 @@ class MainActivityViewModel(
             }
             val localProducts = productRepository.getProductsBySyncStatus(false)
             localProducts.forEach {
-                productRepository.insertProduct(it, DataSource.NETWORK)
+                if (it.isDeleted) {
+                    productRepository.deleteProductNetwork(it.id)
+                } else {
+                    val result = productRepository.createProduct(it.toProduct())
+                    if (result is BaseApiResponse.Success) {
+                        productRepository.insertProduct(result.data, DataSource.NETWORK)
+                    }
+                }
             }
         }
     }

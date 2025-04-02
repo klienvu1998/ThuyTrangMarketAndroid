@@ -31,10 +31,13 @@ interface ProductDao {
     @Query("SELECT * FROM products WHERE category_id = :categoryId")
     fun getProductsByCategoryId(categoryId: String): Flow<List<ProductEntity>>
 
-    @Query("SELECT * FROM products WHERE isSync = :isSync")
+    @Query("SELECT * FROM products WHERE is_sync = :isSync")
     suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity>
 
     @Query("SELECT * FROM products WHERE slug LIKE '%' || :inputText || '%'")
     suspend fun getProductsByNameContaining(inputText: String): List<ProductEntity>
+
+    @Query("UPDATE products SET is_deleted = 1, is_sync = 0 WHERE id = :itemId")
+    suspend fun markItemAsDeleted(itemId: String = "")
 
 }

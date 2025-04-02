@@ -19,8 +19,8 @@ data class Product(
     }
 }
 
-fun Product.toProductEntity(isSync: Boolean): ProductEntity {
-    return ProductEntity(id, globalId, name, categoryId, description, price, isSync = isSync, slug)
+fun Product.toProductEntity(isSync: Boolean, isDeleted: Boolean = false): ProductEntity {
+    return ProductEntity(id, globalId, name, categoryId, description, price, isSync = isSync, isDeleted, slug)
 }
 
 fun Product.toNetworkProduct(): NetworkProduct {

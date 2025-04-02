@@ -46,4 +46,8 @@ class ProductLocalDataSource(private val productDao: ProductDao) {
     suspend fun getProductsByNameContaining(inputText: String): List<ProductEntity> {
         return productDao.getProductsByNameContaining(inputText)
     }
+
+    suspend fun markItemAsDeleted(productId: String) {
+        return productDao.markItemAsDeleted(productId)
+    }
 }

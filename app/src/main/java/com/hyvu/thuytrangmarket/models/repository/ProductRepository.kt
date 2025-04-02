@@ -14,6 +14,7 @@ import com.hyvu.thuytrangmarket.models.database.product.toProduct
 import com.hyvu.thuytrangmarket.models.dataSource.ProductLocalDataSource
 import com.hyvu.thuytrangmarket.models.dataSource.ProductNetworkDatasource
 import com.hyvu.thuytrangmarket.models.dataSource.ProductNetworkDatasource.Companion.TAG
+import com.hyvu.thuytrangmarket.models.database.product.ProductEntity
 import com.hyvu.thuytrangmarket.models.network.product.ProductApiService
 import com.hyvu.thuytrangmarket.models.network.product.toProduct
 import kotlinx.coroutines.CoroutineDispatcher
@@ -52,7 +53,7 @@ class ProductRepository(
 
     suspend fun deleteProduct(product: Product, dataSource: DataSource) {
         val isSync = dataSource == DataSource.NETWORK
-        localDatasource.deleteProduct(product.toProductEntity(isSync))
+        localDatasource.deleteProduct(product.toProductEntity(isSync, isDeleted = true))
     }
 
     suspend fun updateProduct(product: Product, dataSource: DataSource) {
@@ -76,12 +77,16 @@ class ProductRepository(
         return localDatasource.getProductsByCategoryId(categoryId).map { it.map { it.toProduct() } }
     }
 
-    suspend fun getProductsBySyncStatus(isSync: Boolean): List<Product> {
-        return localDatasource.getProductsBySyncStatus(isSync).map { it.toProduct() }
+    suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity> {
+        return localDatasource.getProductsBySyncStatus(isSync)
     }
 
     suspend fun getProductsByNameContaining(inputText: String): List<Product> {
         return localDatasource.getProductsByNameContaining(inputText).map { it.toProduct() }
+    }
+
+    suspend fun markItemAsDeleted(productId: String) {
+        return localDatasource.markItemAsDeleted(productId)
     }
 
     suspend fun fetchProductsByCategory(categoryId: String): BaseApiResponse<List<Product>> = withContext(ioDispatcher) {
@@ -108,6 +113,16 @@ class ProductRepository(
         return@withContext try {
             val data = networkDatasource.updateProduct(product.globalId, product.toNetworkCreateProduct())
             BaseApiResponse.Success(data.toProduct())
+        } catch (e: Exception) {
+            Log.e(TAG, e.message ?: "")
+            BaseApiResponse.Error(NetworkErrorCode.UNKNOWN, e.message ?: "")
+        }
+    }
+
+    suspend fun deleteProductNetwork(productId: String): BaseApiResponse<Boolean> = withContext(ioDispatcher) {
+        return@withContext try {
+            val data = networkDatasource.deleteProduct(productId)
+            BaseApiResponse.Success(data)
         } catch (e: Exception) {
             Log.e(TAG, e.message ?: "")
             BaseApiResponse.Error(NetworkErrorCode.UNKNOWN, e.message ?: "")

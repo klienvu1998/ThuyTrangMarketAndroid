@@ -22,4 +22,8 @@ class ProductNetworkDatasource(private val productApiService: ProductApiService)
         return productApiService.updateProduct(productId, product)
     }
 
+    suspend fun deleteProduct(productId: String): Boolean {
+        return productApiService.deleteProduct(productId).success
+    }
+
 }

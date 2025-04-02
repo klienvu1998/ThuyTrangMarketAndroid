@@ -79,7 +79,7 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
     private val onRecyclerViewListener = object : ListProductAdapter.Listener {
 
         override fun onLongClickItem(bm: Bitmap, product: Product) {
-            val contextMenu = ProductContextMenuView.newInstance(product.id, product.name, product.price)
+            val contextMenu = ProductContextMenuView.newInstance(product.id, product.globalId, product.name, product.price)
             contextMenu.show(parentFragmentManager, ProductContextMenuView.TAG)
         }
 
