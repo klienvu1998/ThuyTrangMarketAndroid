@@ -11,7 +11,8 @@ data class Product(
     val name: String,
     val categoryId: String,
     val description: String,
-    val price: Double
+    val price: Double,
+    val slug: String
 ): Serializable {
     fun isValid(): Boolean {
         return name.isNotEmpty() && categoryId.isNotEmpty() && price >= 0
@@ -19,11 +20,11 @@ data class Product(
 }
 
 fun Product.toProductEntity(isSync: Boolean): ProductEntity {
-    return ProductEntity(id, globalId, name, categoryId, description, price, isSync = isSync)
+    return ProductEntity(id, globalId, name, categoryId, description, price, isSync = isSync, slug)
 }
 
 fun Product.toNetworkProduct(): NetworkProduct {
-    return NetworkProduct(globalId, id, name, categoryId, description, price, "")
+    return NetworkProduct(globalId, id, name, categoryId, description, price, slug)
 }
 
 fun Product.toNetworkCreateProduct(): NetworkCreateProduct {

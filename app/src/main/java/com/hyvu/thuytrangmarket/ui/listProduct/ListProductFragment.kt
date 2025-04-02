@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import android.R.attr.bitmap
 import java.io.ByteArrayOutputStream
 import android.R.attr.name
-
+import androidx.core.view.contains
 
 
 class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
@@ -129,7 +129,9 @@ class ListProductFragment : BaseFragment<FragmentListProductBinding>() {
                     when (uiState) {
                         is ListProductUiState.Loading -> {
                             if (uiState.dataSource == DataSource.LOCAL) {
-                                mBinding.root.addView(loadingView)
+                                if (!mBinding.root.contains(loadingView)) {
+                                    mBinding.root.addView(loadingView)
+                                }
                             } else {
                                 if (activity is MainActivity) {
                                     (activity as MainActivity).showNetworkLoading(true)

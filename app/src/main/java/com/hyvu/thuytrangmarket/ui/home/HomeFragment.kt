@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
+import androidx.core.view.contains
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
@@ -68,10 +69,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun showSearchView() {
-        val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
-        transaction.add(R.id.container, SearchFragment::class.java, null, SearchFragment.TAG)
-        transaction.addToBackStack(SearchFragment.TAG) // Optional: Add to back stack
-        transaction.commit()
+        parentFragmentManager.beginTransaction().add(R.id.container, SearchFragment::class.java, null, SearchFragment.TAG).addToBackStack(SearchFragment.TAG).commit()
     }
 
     override fun initObserver() {
@@ -97,7 +95,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     when (uiState) {
                         is HomeUiState.Loading -> {
                             if (uiState.dataSource == DataSource.LOCAL) {
-//                                mBinding.root.addView(loadingView)
+                                if (!mBinding.root.contains(loadingView)) {
+                                    mBinding.root.addView(loadingView)
+                                }
                             } else {
                                 if (activity is MainActivity) {
                                     (activity as MainActivity).showNetworkLoading(true)

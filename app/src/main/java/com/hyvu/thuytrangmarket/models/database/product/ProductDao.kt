@@ -1,6 +1,7 @@
 package com.hyvu.thuytrangmarket.models.database.product
 
 import androidx.room.*
+import com.hyvu.thuytrangmarket.models.data.Product
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -32,5 +33,8 @@ interface ProductDao {
 
     @Query("SELECT * FROM products WHERE isSync = :isSync")
     suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity>
+
+    @Query("SELECT * FROM products WHERE slug LIKE '%' || :inputText || '%'")
+    suspend fun getProductsByNameContaining(inputText: String): List<ProductEntity>
 
 }

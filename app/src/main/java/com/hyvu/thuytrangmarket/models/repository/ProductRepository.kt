@@ -80,6 +80,10 @@ class ProductRepository(
         return localDatasource.getProductsBySyncStatus(isSync).map { it.toProduct() }
     }
 
+    suspend fun getProductsByNameContaining(inputText: String): List<Product> {
+        return localDatasource.getProductsByNameContaining(inputText).map { it.toProduct() }
+    }
+
     suspend fun fetchProductsByCategory(categoryId: String): BaseApiResponse<List<Product>> = withContext(ioDispatcher) {
         return@withContext try {
             val data = networkDatasource.fetchProductsByCategory(categoryId).map { it.toProduct() }

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.hyvu.thuytrangmarket.models.data.Category
 import com.hyvu.thuytrangmarket.ui.listProduct.ListProductFragment
-import com.hyvu.thuytrangmarket.ui.search.SearchFragment
 
 class HomeViewPagerAdapter(fragment: Fragment): FragmentStateAdapter(fragment) {
 

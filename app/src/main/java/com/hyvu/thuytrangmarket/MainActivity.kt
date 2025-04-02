@@ -1,17 +1,12 @@
 package com.hyvu.thuytrangmarket
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.WindowManager
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.hyvu.thuytrangmarket.base.BaseActivity
 import com.hyvu.thuytrangmarket.databinding.MainActivityBinding
 import com.hyvu.thuytrangmarket.ui.home.HomeFragment
-import com.hyvu.thuytrangmarket.ui.search.SearchFragment
 import com.hyvu.thuytrangmarket.viewModel.mainAcitivity.MainActivityViewModel
 import com.hyvu.thuytrangmarket.viewModel.mainAcitivity.MainActivityViewModelFactory
 

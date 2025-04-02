@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.contains
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.hyvu.thuytrangmarket.R
@@ -59,7 +60,8 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
                     name = getInputName(),
                     categoryId = getCategoryId(),
                     description = getDescription(),
-                    price = getPrice()
+                    price = getPrice(),
+                    ""
                 ))
             } else {
                 context.toast(getString(R.string.str_input_product_invalid))
@@ -83,7 +85,9 @@ class CreateProductFragment : BaseFragment<FragmentCreateProductBinding>() {
 
                     when (uiState) {
                         is CreateProductState.Loading -> {
-                            mBinding.root.addView(loadingView)
+                            if (!mBinding.root.contains(loadingView)) {
+                                mBinding.root.addView(loadingView)
+                            }
                         }
                         is CreateProductState.Success -> {
                             currentCategories = uiState.categories

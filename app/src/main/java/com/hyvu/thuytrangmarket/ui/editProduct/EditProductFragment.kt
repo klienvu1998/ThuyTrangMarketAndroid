@@ -133,7 +133,8 @@ class EditProductFragment : BaseFragment<FragmentCreateProductBinding>() {
                     name = getInputName(),
                     categoryId = getCategoryId(),
                     description = getDescription(),
-                    price = getPrice()
+                    price = getPrice(),
+                    slug = product.slug
                 ))
             } else {
                 context.toast(getString(R.string.str_input_product_invalid))

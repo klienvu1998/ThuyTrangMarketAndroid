@@ -15,9 +15,10 @@ data class ProductEntity(
     val categoryId: String,
     val description: String,
     val price: Double,
-    val isSync: Boolean = false
+    val isSync: Boolean = false,
+    val slug: String
 )
 
 fun ProductEntity.toProduct(): Product {
-    return Product(id, globalId, name, categoryId, description, price)
+    return Product(id, globalId, name, categoryId, description, price, slug)
 }

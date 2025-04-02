@@ -1,5 +1,6 @@
 package com.hyvu.thuytrangmarket.models.dataSource
 
+import com.hyvu.thuytrangmarket.models.data.Product
 import com.hyvu.thuytrangmarket.models.database.product.ProductDao
 import com.hyvu.thuytrangmarket.models.database.product.ProductEntity
 import kotlinx.coroutines.flow.Flow
@@ -40,5 +41,9 @@ class ProductLocalDataSource(private val productDao: ProductDao) {
 
     suspend fun getProductsBySyncStatus(isSync: Boolean): List<ProductEntity> {
         return productDao.getProductsBySyncStatus(isSync)
+    }
+
+    suspend fun getProductsByNameContaining(inputText: String): List<ProductEntity> {
+        return productDao.getProductsByNameContaining(inputText)
     }
 }

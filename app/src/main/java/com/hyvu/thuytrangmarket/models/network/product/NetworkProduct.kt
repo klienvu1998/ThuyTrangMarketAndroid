@@ -22,6 +22,6 @@ data class NetworkProduct(
 
 fun NetworkProduct.toProduct(): Product {
     return Product(
-        clientId, id, name, categoryId, description, price
+        clientId, id, name, categoryId, description, price, slug
     )
 }
